@@ -17,6 +17,7 @@ package ch.zhaw.facerecognitionlibrary.Helpers;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
+import io.github.pixee.security.BoundedLineReader;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -265,11 +266,11 @@ public class FileHelper {
         OneToOneMap<String, Integer> labelMap = new OneToOneMap<>();
         try {
             BufferedReader buf = new BufferedReader(new FileReader(filepath));
-            String line = buf.readLine();
+            String line = BoundedLineReader.readLine(buf, 5_000_000);
             while (line != null){
                 String[] split = line.split(SEPARATOR);
                 labelMap.put(split[0], Integer.valueOf(split[1]));
-                line = buf.readLine();
+                line = BoundedLineReader.readLine(buf, 5_000_000);
             }
             buf.close();
         } catch (FileNotFoundException e) {
@@ -312,7 +313,7 @@ public class FileHelper {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line;
-            while ((line = br.readLine()) != null){
+            while ((line = BoundedLineReader.readLine(br, 5_000_000)) != null){
                 list.add(line);
             }
             br.close();
@@ -330,7 +331,7 @@ public class FileHelper {
             BufferedReader br = new BufferedReader(fr);
             Integer line = 0;
             String sLine;
-            while ((sLine = br.readLine()) != null){
+            while ((sLine = BoundedLineReader.readLine(br, 5_000_000)) != null){
                 line = Integer.parseInt(sLine);
                 list.add(line);
             }
