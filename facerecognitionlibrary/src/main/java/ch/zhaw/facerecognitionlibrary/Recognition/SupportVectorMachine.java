@@ -16,6 +16,7 @@ limitations under the License.
 package ch.zhaw.facerecognitionlibrary.Recognition;
 
 import android.content.Context;
+import io.github.pixee.security.BoundedLineReader;
 
 import org.opencv.core.Mat;
 
@@ -130,7 +131,7 @@ public class SupportVectorMachine implements Recognition {
 
         try {
             BufferedReader buf = new BufferedReader(new FileReader(output));
-            int iLabel = Integer.valueOf(buf.readLine());
+            int iLabel = Integer.valueOf(BoundedLineReader.readLine(buf, 5_000_000));
             buf.close();
             return labelMap.getKey(iLabel);
         } catch (FileNotFoundException e) {
@@ -158,9 +159,9 @@ public class SupportVectorMachine implements Recognition {
         try {
             BufferedReader buf = new BufferedReader(new FileReader(output));
             // read header line
-            String probability = buf.readLine() + "\n";
+            String probability = BoundedLineReader.readLine(buf, 5_000_000) + "\n";
             // read content line
-            probability = probability + buf.readLine();
+            probability = probability + BoundedLineReader.readLine(buf, 5_000_000);
             buf.close();
             return probability;
         } catch (FileNotFoundException e) {
